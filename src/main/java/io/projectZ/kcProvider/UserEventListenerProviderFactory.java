@@ -1,12 +1,11 @@
-package io.github.HealthCareService.kcProvider;
+package io.projectZ.kcProvider;
 /*
   Project : KeyCloak-kafka-plugin
   Author  : AmirHFF
   Created : 6/15/2026 - 10:35 PM
 */
 
-import io.github.HealthCareService.Main;
-import io.github.HealthCareService.Properties;
+import io.projectZ.Properties;
 import org.jboss.logging.Logger;
 import org.keycloak.Config;
 import org.keycloak.events.EventListenerProvider;

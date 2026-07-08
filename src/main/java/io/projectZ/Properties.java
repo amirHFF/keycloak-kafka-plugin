@@ -1,4 +1,4 @@
-package io.github.HealthCareService;
+package io.projectZ;
 /*
   Project : KeyCloak-kafka-plugin
   Author  : AmirHFF

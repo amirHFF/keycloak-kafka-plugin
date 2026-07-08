@@ -1,8 +1,8 @@
-package io.github.HealthCareService;
+package io.projectZ;
 
-import io.github.HealthCareService.kafka.EventDTO;
-import io.github.HealthCareService.kafka.Publisher;
+import io.projectZ.kafka.Publisher;
 
+import io.projectZ.kafka.UserEventDto;
 import java.util.Properties;
 
 public class Main {
@@ -15,7 +15,7 @@ public class Main {
         for (int i = 0; i < args.length; i++) {
             switch (i) {
                 case 0:
-                    io.github.HealthCareService.Properties.KAFKA_ADDRESS=args[i];
+                    io.projectZ.Properties.KAFKA_ADDRESS=args[i];
                     break;
                 case 1:
                     properties.put(KAFKA_TOPIC_STRING, args[i]);
@@ -25,12 +25,12 @@ public class Main {
                     break;
             }
         }
-        Publisher publisher = new Publisher("user-events");
-        EventDTO eventDTO = new EventDTO();
+        Publisher publisher = Publisher.getInstance();
+        UserEventDto eventDTO = new UserEventDto();
         eventDTO.setRealmId("xx");
         eventDTO.setClientId("11");
-        eventDTO.setUuid("uu11");
-        eventDTO.setKeycloakId("keycloak11");
+        eventDTO.setId("uu11");
+        eventDTO.setId("keycloak11");
         publisher.publish(eventDTO);
     }
 }

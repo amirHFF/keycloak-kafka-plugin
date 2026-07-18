@@ -1,4 +1,4 @@
-package io.projectZ.kafka;
+package io.projectZ.kafka.dto;
 /*
     Project : keycloak-kafka-Listener
     Author  : a.FouladiFar
@@ -9,17 +9,9 @@ import java.util.Map;
 import org.keycloak.events.EventType;
 
 public class UserEventDto extends EventDTO{
+    private String userid;
     private EventType eventType;
     private String clientId;
-    private Map<String , String> details;
-
-    public Map<String, String> getDetails() {
-        return details;
-    }
-
-    public void setDetails(Map<String, String> details) {
-        this.details = details;
-    }
 
     public EventType getEventType() {
         return eventType;
@@ -35,5 +27,13 @@ public class UserEventDto extends EventDTO{
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 }

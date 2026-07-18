@@ -5,10 +5,13 @@ package io.projectZ.kcProvider;
   Created : 6/15/2026 - 10:20 PM
 */
 
-import io.projectZ.kafka.AdminEventDto;
-import io.projectZ.kafka.EventDTO;
+import io.projectZ.kafka.dto.AdminEventDto;
+import io.projectZ.kafka.dto.EventDTO;
 import io.projectZ.kafka.Publisher;
-import io.projectZ.kafka.UserEventDto;
+import io.projectZ.kafka.dto.UserEventDto;
+import io.projectZ.mapper.AdminEventMapper;
+import io.projectZ.mapper.KafkaEventMapper;
+import io.projectZ.mapper.UserEventMapper;
 import org.jboss.logging.Logger;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventListenerProvider;
@@ -17,6 +20,8 @@ import org.keycloak.events.admin.AdminEvent;
 public class UserEventListenerProvider implements EventListenerProvider {
     private final Publisher publisher;
     private final Logger logger = Logger.getLogger(UserEventListenerProvider.class);
+    private KafkaEventMapper<AdminEventDto , AdminEvent> adminEventMapper = new AdminEventMapper();
+    private KafkaEventMapper<UserEventDto , Event> userEventMapper = new UserEventMapper();
 
     public UserEventListenerProvider() {
         publisher = Publisher.getInstance();
@@ -24,15 +29,16 @@ public class UserEventListenerProvider implements EventListenerProvider {
 
     @Override
     public void onEvent(Event event) {
-
-        EventDTO eventDTO = createEventDto(event);
-        publisher.publish(eventDTO);
+        logger.info("user event triggered");
+        UserEventDto userEventDto = userEventMapper.map(event);
+        publisher.publish(userEventDto);
     }
 
     @Override
     public void onEvent(AdminEvent adminEvent, boolean b) {
-        EventDTO eventDTO = createAdminEventDto(adminEvent);
-        publisher.publish(eventDTO);
+        logger.info("admin event triggered");
+        AdminEventDto event = adminEventMapper.map(adminEvent);
+        publisher.publish(event);
 
     }
 
@@ -41,38 +47,5 @@ public class UserEventListenerProvider implements EventListenerProvider {
         publisher.close();
     }
 
-    private UserEventDto createEventDto(Event event) {
-        if (event != null) {
-            UserEventDto eventDTO = new UserEventDto();
-
-            eventDTO.setDetails(event.getDetails());
-            eventDTO.setEventType(event.getType());
-            eventDTO.setId(event.getId());
-            eventDTO.setOccurredAt(event.getTime());
-            eventDTO.setClientId(event.getClientId());
-            eventDTO.setRealmId(event.getRealmId());
-            return eventDTO;
-        } else {
-            logger.error("event is empty");
-            throw new IllegalArgumentException("event is empty");
-        }
-    }
-    private AdminEventDto createAdminEventDto(AdminEvent event) {
-        if (event != null) {
-            AdminEventDto eventDTO = new AdminEventDto();
-
-            eventDTO.setResourceId(event.getResourceId());
-            eventDTO.setId(event.getId());
-            eventDTO.setOccurredAt(event.getTime());
-            eventDTO.setResourceType(event.getResourceTypeAsString());
-            eventDTO.setRealmId(event.getRealmId());
-            eventDTO.setOperationType(event.getOperationType().name());
-            eventDTO.setAuthDetails(event.getAuthDetails());
-            return eventDTO;
-        } else {
-            logger.error("event is empty");
-            throw new IllegalArgumentException("event is empty");
-        }
-    }
 }
 

@@ -1,4 +1,4 @@
-package io.projectZ.kafka;
+package io.projectZ.kafka.dto;
 /*
     Project : keycloak-kafka-Listener
     Author  : a.FouladiFar

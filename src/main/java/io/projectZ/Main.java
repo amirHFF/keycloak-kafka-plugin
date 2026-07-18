@@ -2,7 +2,7 @@ package io.projectZ;
 
 import io.projectZ.kafka.Publisher;
 
-import io.projectZ.kafka.UserEventDto;
+import io.projectZ.kafka.dto.UserEventDto;
 import java.util.Properties;
 
 public class Main {

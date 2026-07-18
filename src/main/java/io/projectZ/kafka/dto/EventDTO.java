@@ -1,4 +1,4 @@
-package io.projectZ.kafka;
+package io.projectZ.kafka.dto;
 /*
   Project : KeyCloak-kafka-plugin
   Author  : AmirHFF
@@ -13,6 +13,10 @@ public class EventDTO {
   private String id;
   private long occurredAt;
   private String realmId;
+
+  private Map<String , String> details;
+
+  private UserInfo userInfo;
 
   public String getRealmId() {
     return realmId;
@@ -38,5 +42,20 @@ public class EventDTO {
     this.occurredAt = occurredAt;
   }
 
+  public UserInfo getUserInfo() {
+    return userInfo;
+  }
+
+  public void setUserInfo(UserInfo userInfo) {
+    this.userInfo = userInfo;
+  }
+
+  public Map<String, String> getDetails() {
+    return details;
+  }
+
+  public void setDetails(Map<String, String> details) {
+    this.details = details;
+  }
 }
 

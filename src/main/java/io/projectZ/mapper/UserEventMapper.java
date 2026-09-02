@@ -27,7 +27,7 @@ public class UserEventMapper implements KafkaEventMapper<UserEventDto, Event> {
                     eventDTO.setUserInfo(userInfo);
                 }
                 if (event.getDetails().get("email") != null) {
-                    userInfo.setUsername(event.getDetails().get("email"));
+                    userInfo.setEmail(event.getDetails().get("email"));
                     eventDTO.setUserInfo(userInfo);
                 }
             }

@@ -37,9 +37,9 @@ public class AdminEventMapper implements KafkaEventMapper<AdminEventDto, AdminEv
             eventDTO.setResourceId(event.getResourceId());
             eventDTO.setId(event.getId());
             eventDTO.setOccurredAt(event.getTime());
-            eventDTO.setResourceType(event.getResourceTypeAsString());
+            eventDTO.setResourceType(event.getResourceType());
             eventDTO.setRealmId(event.getRealmId());
-            eventDTO.setOperationType(event.getOperationType().name());
+            eventDTO.setOperationType(event.getOperationType());
             eventDTO.setAuthDetails(event.getAuthDetails());
             return eventDTO;
         } else {

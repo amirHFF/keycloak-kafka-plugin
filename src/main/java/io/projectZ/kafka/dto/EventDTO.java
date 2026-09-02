@@ -18,6 +18,8 @@ public class EventDTO {
 
   private UserInfo userInfo;
 
+  protected boolean userEvent;
+
   public String getRealmId() {
     return realmId;
   }
@@ -56,6 +58,14 @@ public class EventDTO {
 
   public void setDetails(Map<String, String> details) {
     this.details = details;
+  }
+
+  public boolean isUserEvent() {
+    return userEvent;
+  }
+
+  public void setUserEvent(boolean userEvent) {
+    this.userEvent = userEvent;
   }
 }
 

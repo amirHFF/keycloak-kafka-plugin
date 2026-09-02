@@ -28,7 +28,7 @@ public class UserEventListenerProviderFactory implements EventListenerProviderFa
     public void init(Config.Scope scope) {
 
         logger.info("factory init ...");
-        Properties.KAFKA_ADDRESS = scope.get("kafka-address");
+        Properties.KAFKA_ADDRESS = scope.get("address");
         Properties.KAFKA_TOPIC = scope.get("topic");
         logger.info(Properties.KAFKA_ADDRESS);
         logger.info(Properties.KAFKA_TOPIC);
@@ -49,7 +49,7 @@ public class UserEventListenerProviderFactory implements EventListenerProviderFa
 
     @Override
     public String getId() {
-        return "user-sync-kafka-provider";
+        return "user-sync-provider";
     }
 }
 

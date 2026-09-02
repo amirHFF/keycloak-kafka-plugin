@@ -9,6 +9,10 @@ import java.util.Map;
 import org.keycloak.events.EventType;
 
 public class UserEventDto extends EventDTO{
+    public UserEventDto() {
+        userEvent = true;
+    }
+
     private String userid;
     private EventType eventType;
     private String clientId;

@@ -6,12 +6,18 @@ package io.projectZ.kafka.dto;
 */
 
 import org.keycloak.events.admin.AuthDetails;
+import org.keycloak.events.admin.OperationType;
+import org.keycloak.events.admin.ResourceType;
 
 public class AdminEventDto extends EventDTO{
 
-    private String resourceType;
+    public AdminEventDto() {
+        userEvent = false;
+    }
+
+    private ResourceType resourceType;
     private String resourceId;
-    private String operationType;
+    private OperationType operationType;
     private AuthDetails authDetails;
 
     public AuthDetails getAuthDetails() {
@@ -22,14 +28,6 @@ public class AdminEventDto extends EventDTO{
         this.authDetails = authDetails;
     }
 
-    public String getResourceType() {
-        return resourceType;
-    }
-
-    public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
-    }
-
     public String getResourceId() {
         return resourceId;
     }
@@ -38,11 +36,19 @@ public class AdminEventDto extends EventDTO{
         this.resourceId = resourceId;
     }
 
-    public String getOperationType() {
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
+
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
+    }
+
+    public OperationType getOperationType() {
         return operationType;
     }
 
-    public void setOperationType(String operationType) {
+    public void setOperationType(OperationType operationType) {
         this.operationType = operationType;
     }
 }

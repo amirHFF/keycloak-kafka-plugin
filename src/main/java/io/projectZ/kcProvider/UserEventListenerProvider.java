@@ -5,10 +5,12 @@ package io.projectZ.kcProvider;
   Created : 6/15/2026 - 10:20 PM
 */
 
+import io.projectZ.kafka.TopicResolver;
 import io.projectZ.kafka.dto.AdminEventDto;
 import io.projectZ.kafka.dto.EventDTO;
 import io.projectZ.kafka.Publisher;
 import io.projectZ.kafka.dto.UserEventDto;
+import io.projectZ.kafka.simpleTopicResolver;
 import io.projectZ.mapper.AdminEventMapper;
 import io.projectZ.mapper.KafkaEventMapper;
 import io.projectZ.mapper.UserEventMapper;
@@ -19,6 +21,7 @@ import org.keycloak.events.admin.AdminEvent;
 
 public class UserEventListenerProvider implements EventListenerProvider {
     private final Publisher publisher;
+    private final TopicResolver topicResolver = new simpleTopicResolver();
     private final Logger logger = Logger.getLogger(UserEventListenerProvider.class);
     private KafkaEventMapper<AdminEventDto , AdminEvent> adminEventMapper = new AdminEventMapper();
     private KafkaEventMapper<UserEventDto , Event> userEventMapper = new UserEventMapper();
@@ -29,16 +32,16 @@ public class UserEventListenerProvider implements EventListenerProvider {
 
     @Override
     public void onEvent(Event event) {
-        logger.info("user event triggered");
+        logger.info("user event triggered event :"+event.getUserId());
         UserEventDto userEventDto = userEventMapper.map(event);
-        publisher.publish(userEventDto);
+        publisher.publish(topicResolver.resolve(userEventDto), userEventDto);
     }
 
     @Override
     public void onEvent(AdminEvent adminEvent, boolean b) {
-        logger.info("admin event triggered");
+        logger.info("admin event triggered ,resourceType : "+adminEvent.getResourceType().name());
         AdminEventDto event = adminEventMapper.map(adminEvent);
-        publisher.publish(event);
+        publisher.publish(topicResolver.resolve(event), event);
 
     }
 

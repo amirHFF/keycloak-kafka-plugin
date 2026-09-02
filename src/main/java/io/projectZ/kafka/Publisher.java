@@ -18,17 +18,18 @@ public class Publisher {
 
     private static Publisher instance = new Publisher();
     private final Logger logger = Logger.getLogger(Publisher.class);
-    private final String topic;
     private final Properties props = new Properties();
     private final KafkaProducer<String, EventDTO> kafkaProducer;
 
     private Publisher() {
-        this.topic = io.projectZ.Properties.KAFKA_TOPIC;
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, io.projectZ.Properties.KAFKA_ADDRESS);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
+
         props.put(ProducerConfig.LINGER_MS_CONFIG, 200);
-        props.put(ProducerConfig.RETRIES_CONFIG, 100);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
         kafkaProducer = new KafkaProducer<>(props);
@@ -39,21 +40,29 @@ public class Publisher {
         return instance;
     }
 
-    public void publish(EventDTO eventDTO) {
+    public void publish(String topic ,EventDTO eventDTO) {
 
-        logger.info("publish for " + eventDTO.getId());
-        ProducerRecord<String, EventDTO> record = new ProducerRecord<>(topic, eventDTO.getId(), eventDTO);
-        kafkaProducer.send(record, (recordMetadata, e) -> {
-            logger.info("event timestamp : " + recordMetadata.timestamp() + " offset :" + recordMetadata.offset());
-            if (e != null) {
-                logger.error("exception : " + e);
+        if (topic !=null) {
+            try {
+                logger.info("publish for :" + eventDTO.getId());
+                logger.info("topic is :" + topic);
+                ProducerRecord<String, EventDTO> record = new ProducerRecord<>(topic, eventDTO.getId(), eventDTO);
+                kafkaProducer.send(record, (recordMetadata, exception) -> {
+                    logger.info("event timestamp : " + recordMetadata.timestamp() + " offset :" + recordMetadata.offset());
+                    if (exception != null) {
+                        logger.error("exception : " + exception);
+                    }
+                });
+            }catch (Exception e){
+                logger.error("ignored exception : ",e);
             }
-        });
+        }else {
+            logger.info("ignored event ...");
+        }
     }
 
     public void close() {
         kafkaProducer.flush();
-        kafkaProducer.close();
     }
 }
 

@@ -8,6 +8,7 @@ package io.projectZ.kafka.dto;
 import org.keycloak.events.admin.AuthDetails;
 import org.keycloak.events.admin.OperationType;
 import org.keycloak.events.admin.ResourceType;
+import org.keycloak.representations.account.UserRepresentation;
 
 public class AdminEventDto extends EventDTO{
 
@@ -19,6 +20,16 @@ public class AdminEventDto extends EventDTO{
     private String resourceId;
     private OperationType operationType;
     private AuthDetails authDetails;
+
+    private String representation;
+
+    public String getRepresentation() {
+        return representation;
+    }
+
+    public void setRepresentation(String representation) {
+        this.representation = representation;
+    }
 
     public AuthDetails getAuthDetails() {
         return authDetails;

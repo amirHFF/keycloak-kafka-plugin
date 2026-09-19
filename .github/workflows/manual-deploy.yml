@@ -1,0 +1,71 @@
+name: Manual Build & Deploy Keycloak Plugin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Build plugin
+        run: |
+          mvn -B clean package
+
+      - name: Verify JAR
+        run: |
+          JAR="target/keycloak-event-listener-spi-kafka-jar-with-dependencies.jar"
+
+          if [ ! -f "$JAR" ]; then
+            echo "JAR file not found: $JAR"
+            exit 1
+          fi
+
+          echo "Build successful:"
+          ls -lh "$JAR"
+
+      - name: Deploy plugin
+        run: |
+          JAR="target/keycloak-event-listener-spi-kafka-jar-with-dependencies.jar"
+
+          sudo cp "$JAR" \
+            /home/debian/keycloak/keycloak-event-listener-spi-kafka.jar
+
+          sudo chown 1000:1000 \
+            /home/debian/keycloak/keycloak-event-listener-spi-kafka.jar
+
+          echo "Plugin deployed:"
+          ls -lh /home/debian/keycloak/keycloak-event-listener-spi-kafka.jar
+
+      - name: Verify plugin inside Keycloak
+        run: |
+          sudo docker exec main-keycloak \
+            ls -lh /opt/keycloak/providers/keycloak-event-listener-spi-kafka.jar
+
+      - name: Restart Keycloak
+        run: |
+          sudo docker restart main-keycloak
+
+      - name: Verify Keycloak container
+        run: |
+          sleep 10
+
+          if [ "$(sudo docker inspect -f '{{.State.Running}}' main-keycloak)" != "true" ]; then
+            echo "Keycloak container is not running!"
+            exit 1
+          fi
+
+          echo "Keycloak container is running."
+
+      - name: Show Keycloak logs
+        run: |
+          sudo docker logs --tail 100 main-keycloak
